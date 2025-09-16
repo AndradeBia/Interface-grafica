@@ -1,113 +1,106 @@
-
-````markdown
 # HEVA: Pipeline Integrado para Análise de Lesões de Pele 🔬
 
-Bem-vindo ao repositório do **HEVA** (Hybrid Ensemble for Vision Analysis), um projeto que implementa uma interface gráfica para um robusto pipeline de machine learning de duas etapas para a classificação de lesões de pele.
+Bem-vindo ao repositório do **HEVA** (Hybrid Ensemble for Vision Analysis) — um projeto que implementa uma interface gráfica para um **pipeline robusto de machine learning em duas etapas** voltado à classificação de lesões de pele.
 
-A aplicação, construída com **Gradio**, permite que o usuário faça o upload de uma imagem de qualquer tamanho. A imagem então passa por:
-1.  Um modelo de **segmentação semântica (Segformer)** para identificar e isolar a lesão.
-2.  Um poderoso **modelo de classificação em ensemble** que combina descritores de textura, features da ResNet e do Vision Transformer (ViT) para classificar a lesão como "Benigna" ou "Maligna".
+A aplicação foi construída com **Gradio** e permite que o usuário faça upload de uma imagem de qualquer tamanho, que será processada da seguinte forma:
+
+1. **Segmentação Semântica (Segformer):** Identificação e isolamento da lesão.  
+2. **Classificação em Ensemble:** Combinação de descritores clássicos e redes neurais profundas para classificar a lesão como **Benigna** ou **Maligna**.
+
+---
 
 ## ✨ Principais Funcionalidades
 
--   **Interface Amigável:** Interface web simples e intuitiva criada com Gradio.
--   **Pipeline de Duas Etapas:** Primeiro segmenta, depois classifica, imitando o foco de um especialista.
--   **Modelo Ensemble Híbrido:** Combina a força dos descritores clássicos (LBP) com o poder de representação de modelos de deep learning (ResNet e ViT).
--   **Flexibilidade de Entrada:** Aceita imagens de lesões de pele de diferentes tamanhos e resoluções.
--   **Feedback Visual:** Além da classificação, a interface exibe a máscara de segmentação gerada pelo modelo, mostrando qual área da imagem foi analisada.
+- **Interface Amigável:** Webapp simples e intuitivo em Gradio.  
+- **Pipeline em Duas Etapas:** Segmentação + Classificação, simulando o processo de análise de um especialista.  
+- **Ensemble Híbrido:** Combina descritores clássicos (**LBP**) com redes neurais (**ResNet50 e ViT**).  
+- **Flexibilidade:** Aceita imagens de diferentes tamanhos e resoluções.  
+- **Feedback Visual:** Exibe a máscara de segmentação junto ao resultado final.  
+
+---
 
 ## 🏗️ Arquitetura do Modelo
 
-O pipeline do HEVA é dividido em duas etapas principais:
+O pipeline é dividido em duas grandes etapas:
 
-### Etapa 1: Segmentação Semântica com Segformer
+### 🔹 Etapa 1 — Segmentação com Segformer
+- Utiliza o modelo **Segformer** (`nvidia/segformer-b5-finetuned-ade-640-640`) ajustado para detectar lesões de pele.  
+- Gera uma **máscara binária**, isolando a região de interesse.  
 
-Qualquer imagem de entrada é primeiramente processada por um modelo **Segformer** (especificamente, `nvidia/segformer-b5-finetuned-ade-640-640`) que foi afinado para identificar lesões de pele. O resultado é uma máscara binária que isola a região de interesse.
+### 🔹 Etapa 2 — Classificação com Ensemble Híbrido
+Após a segmentação, a área da lesão é recortada e processada para extração de **três tipos de características**:
 
-### Etapa 2: Classificação com Ensemble Híbrido
+1. **Descritores de Textura (LBP):** Capturam padrões da superfície.  
+2. **Features da ResNet50:** Extração hierárquica de representações.  
+3. **Features do Vision Transformer (ViT):** Relações globais e contextuais (`google/vit-base-patch16-224-in21k`).  
 
-Após o isolamento da lesão, a área é recortada e pré-processada. Em seguida, extraímos três conjuntos de características distintas:
+Essas features são concatenadas e classificadas por um **SVM** (Support Vector Machine).  
 
-1.  **Descritores de Textura:** Através do **Local Binary Pattern (LBP)**, capturamos características de textura da superfície da lesão.
-2.  **Features da ResNet50:** Utilizamos uma **ResNet50** pré-treinada para extrair features hierárquicas da imagem.
-3.  **Features do Vision Transformer (ViT):** Usamos um **ViT** (`google/vit-base-patch16-224-in21k`) para capturar relações globais e contextuais na imagem da lesão.
-
-Finalmente, essas três fontes de informação são concatenadas e alimentam um classificador **Support Vector Machine (SVM)**, que realiza o diagnóstico final.
+---
 
 ## 🚀 Instalação e Execução
 
-Para executar esta aplicação localmente, siga os passos abaixo.
+### 📌 Pré-requisitos
+- Python **3.8+**  
+- Git  
+- **Git LFS** (necessário para os arquivos grandes dos modelos)  
 
-### Pré-requisitos
-
--   Python 3.8+
--   Git
--   **Git LFS** (Large File Storage)
-
-### 1. Instalação do Git LFS
-
-Este repositório utiliza o Git LFS para gerenciar os arquivos grandes dos modelos. **É crucial que você instale o Git LFS** no seu computador antes de clonar o repositório.
-
--   Visite [git-lfs.github.com](https://git-lfs.github.com) e siga as instruções de download e instalação para o seu sistema operacional.
--   Após a instalação, configure o Git LFS executando o seguinte comando no seu terminal:
-    ```bash
-    git lfs install
-    ```
-
-### 2. Clonando o Repositório
-
-Com o Git LFS instalado, clone o repositório. Os arquivos grandes dos modelos serão baixados automaticamente durante o processo de `clone`.
-
+### 1. Instalar o Git LFS
+Baixe e instale o Git LFS em: [git-lfs.github.com](https://git-lfs.github.com)  
+Depois, configure no terminal:  
 ```bash
-git clone [https://github.com/AndradeBia/Interface-grafica.git](https://github.com/AndradeBia/Interface-grafica.git)
+git lfs install
+```
+
+### 2. Clonar o Repositório
+```bash
+git clone https://github.com/AndradeBia/Interface-grafica.git
 cd Interface-grafica
 ```
-*Se os arquivos dos modelos não forem baixados (e aparecerem como pequenos arquivos de texto), execute `git lfs pull` dentro da pasta do projeto.*
-
-### 3. Configurando o Ambiente Virtual
-
-É uma boa prática criar um ambiente virtual para isolar as dependências do projeto.
-
+> ⚠️ Caso os modelos não sejam baixados corretamente (aparecendo como arquivos pequenos de texto), execute:  
 ```bash
-# Criar um ambiente virtual
+git lfs pull
+```
+
+### 3. Criar Ambiente Virtual
+```bash
+# Criar
 python -m venv venv
 
-# Ativar o ambiente (Windows)
+# Ativar (Windows)
 .\venv\Scripts\activate
 
-# Ativar o ambiente (macOS/Linux)
+# Ativar (Linux/macOS)
 source venv/bin/activate
 ```
 
-### 4. Instalando as Dependências
-
-Instale todas as bibliotecas necessárias com um único comando:
-
+### 4. Instalar Dependências
 ```bash
 pip install -r requirements.txt
 ```
 
-### 5. Executando a Aplicação
-
-Com tudo instalado, inicie a interface Gradio:
-
+### 5. Executar a Aplicação
 ```bash
 python app.py
 ```
-Aguarde a mensagem "🧠 Carregando todos os modelos...", que pode levar alguns instantes. Após o carregamento, acesse o endereço local (geralmente `http://127.0.0.1:7860`) que aparecerá no seu terminal.
+Aguarde a mensagem **"🧠 Carregando todos os modelos..."**.  
+Depois, acesse a aplicação no navegador em [http://127.0.0.1:7860](http://127.0.0.1:7860).  
 
-## 📁 Estrutura dos Arquivos
+---
 
+## 📁 Estrutura do Projeto
 ```
-└── andradebia-interface-grafica/
-    ├── app.py                      # Código principal da aplicação Gradio e do pipeline.
-    ├── requirements.txt            # Lista de dependências Python.
-    ├── feature_extractor_finetuned.h5 # Modelo ResNet50 para extração de features.
-    ├── segformer_best_model.pth    # Pesos do modelo Segformer afinado.
-    ├── svm_pipeline_artifacts.pkl  # Artefatos do SVM (modelo, scaler, etc.).
-    └── vit_model/                    # Pasta contendo o modelo ViT.
+└── Interface-grafica/
+    ├── app.py                      # Código principal da aplicação Gradio e pipeline
+    ├── requirements.txt            # Dependências do projeto
+    ├── feature_extractor_finetuned.h5   # Modelo ResNet50 para extração de features
+    ├── segformer_best_model.pth    # Pesos do Segformer treinado
+    ├── svm_pipeline_artifacts.pkl  # Artefatos do SVM (modelo, scaler, etc.)
+    └── vit_model/                  # Pasta do modelo ViT
         ├── config.json
         └── model.safetensors
 ```
+---
 
+💡 **HEVA** combina **deep learning** e **descritores clássicos** para uma análise precisa de lesões cutâneas, com foco em usabilidade e transparência no processo.
 
