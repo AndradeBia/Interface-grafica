@@ -1,8 +1,3 @@
-Claro\! Baseado na estrutura do seu projeto e no código do `app.py`, preparei uma sugestão de `README.md` bem completa. Este arquivo é a porta de entrada do seu projeto, então é importante que ele seja claro e informativo.
-
-Você pode copiar e colar o texto abaixo em um novo arquivo chamado `README.md` na raiz do seu repositório.
-
------
 
 ````markdown
 # HEVA: Pipeline Integrado para Análise de Lesões de Pele 🔬
