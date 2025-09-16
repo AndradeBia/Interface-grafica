@@ -2,15 +2,11 @@
 ````markdown
 # HEVA: Pipeline Integrado para Análise de Lesões de Pele 🔬
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
 Bem-vindo ao repositório do **HEVA** (Hybrid Ensemble for Vision Analysis), um projeto que implementa uma interface gráfica para um robusto pipeline de machine learning de duas etapas para a classificação de lesões de pele.
 
 A aplicação, construída com **Gradio**, permite que o usuário faça o upload de uma imagem de qualquer tamanho. A imagem então passa por:
 1.  Um modelo de **segmentação semântica (Segformer)** para identificar e isolar a lesão.
 2.  Um poderoso **modelo de classificação em ensemble** que combina descritores de textura, features da ResNet e do Vision Transformer (ViT) para classificar a lesão como "Benigna" ou "Maligna".
-
-
 
 ## ✨ Principais Funcionalidades
 
@@ -114,7 +110,4 @@ Aguarde a mensagem "🧠 Carregando todos os modelos...", que pode levar alguns 
         └── model.safetensors
 ```
 
-## 📄 Licença
 
-Este projeto está licenciado sob a Licença MIT. Veja o arquivo `LICENSE` para mais detalhes.
-````
