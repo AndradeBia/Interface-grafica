@@ -1,0 +1,10 @@
+gradio
+numpy
+scikit-learn
+tensorflow
+torch
+transformers
+scikit-image
+scipy
+opencv-python
+Pillow
